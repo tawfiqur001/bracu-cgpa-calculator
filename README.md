@@ -79,6 +79,4 @@ Click **Calculate CGPA** to view your updated cumulative GPA.
 
 This calculator is an unofficial student-made tool and is intended for estimation purposes only. Always verify your academic records through the official BRAC University student portal.
 
----
 
-Made by Md. Tawfiqur Rahman with the help of Claude.
