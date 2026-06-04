@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CGPA Calculator — BRACU</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:      #1e1a14;
+  --paper:    #f4f6f9;
+  --cream:    #e8ecf3;
+  --cream2:   #dde2ed;
+  --line:     #cdd3e0;
+  --line-dk:  #a8b2c8;
+  --muted:    #6b7a96;
+  --ghost:    #a0abbe;
+  --navy:     #0f2548;
+  --navy-l:   #1a3868;
+  --green:    #2f5c3e;
+  --red:      #8b2020;
+  --surface:  #ffffff;
+  --radius:   5px;
+  --terracotta: #0f2548;
+  --terra-l:    #1a3868;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  padding-bottom: 0;
+}
+
+/* ── Header ─────────────────────────────────── */
+.header {
+  background: #08172e;
+  padding: 28px 20px 24px;
+  text-align: center;
+}
+
+.header-eyebrow {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.70);
+  margin-bottom: 8px;
+}
+
+.header-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(30px, 7vw, 42px);
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0px;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.header-sub {
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.68);
+}
+
+/* ── Wrap ────────────────────────────────────── */
+.wrap {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ── Card ────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  margin-top: 16px;
+  border-radius: var(--radius);
+  overflow: visible;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--cream);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.card-title {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0px;
+}
+
+.card-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #4a5870;
+  background: var(--cream2);
+  border: 1px solid var(--line-dk);
+  padding: 3px 9px;
+  border-radius: 2px;
+}
+
+.card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: visible;
+}
+
+/* ── Prior grid ──────────────────────────────── */
+.prior-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ── Field ───────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: 4px; }
+
+.field-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #4a5870;
+}
+
+input {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  padding: 9px 11px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+}
+input:focus { border-color: var(--ink); background: #fff; }
+input::placeholder { color: var(--ghost); }
+input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
+
+/* ── Column heads ────────────────────────────── */
+.col-heads { display: grid; gap: 8px; padding: 0 2px; }
+.col-heads.regular { grid-template-columns: 86px 1fr 30px; }
+
+.col-head {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #4a5870;
+}
+.col-head.spacer { visibility: hidden; }
+
+/* ── Course row ─────────────────────────────────── */
+.course-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: rowIn 0.18s ease;
+  margin-bottom: 10px;
+}
+@keyframes rowIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.course-box, .repeat-box { flex: 1; min-width: 0; }
+
+.row        { display: grid; grid-template-columns: 86px 1fr; gap: 8px; }
+
+.repeat-item {
+  display: grid;
+  grid-template-columns: 78px 1fr 34px;
+  gap: 8px;
+  align-items: center;
+  animation: rowIn 0.18s ease;
+  margin-bottom: 10px;
+}
+
+.repeat-grades {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.repeat-grade-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #4a5870;
+  margin-bottom: 2px;
+}
+
+.repeat-credit-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.repeat-remove-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+
+.repeat-remove-col .remove-btn {
+  height: 34px;
+  width: 34px;
+}
+
+/* ── Repeat subsection ───────────────────────── */
+.repeat-sub {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: visible;
+  margin-bottom: 10px;
+  animation: rowIn 0.18s ease;
+}
+
+.repeat-sub-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--line);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.repeat-sub-num {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--navy);
+  opacity: 0.7;
+}
+
+/* ── Dropdown ─ */
+.dropdown { position: relative; }
+
+.dropdown-selected {
+  padding: 9px 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--ink);
+  user-select: none;
+  transition: border-color 0.15s, background 0.15s;
+  gap: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.dropdown-selected:hover { border-color: var(--terracotta); background: #fff; }
+.dropdown.open .dropdown-selected { border-color: var(--terracotta); background: #fff; }
+
+.dropdown-selected span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.dd-arrow {
+  flex-shrink: 0;
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--ghost);
+  transition: transform 0.15s;
+}
+.dropdown.open .dd-arrow { transform: rotate(180deg); }
+
+.dropdown-list {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line-dk);
+  border-radius: var(--radius);
+  display: none;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+  max-height: 240px;
+  overflow-y: auto;
+}
+.dropdown-list.show { display: block; }
+
+.dropdown-item {
+  padding: 9px 13px;
+  cursor: pointer;
+  font-size: 13.5px;
+  color: var(--ink);
+  transition: background 0.1s;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.dropdown-item:last-child { border-bottom: none; }
+.dropdown-item:hover { background: var(--cream); }
+.dropdown-item.active { font-weight: 600; color: var(--navy); background: #edf1f8; }
+
+/* ── Remove btn ──────────────────────────────── */
+.remove-btn {
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--line-dk);
+  background: var(--cream);
+  color: #5a6a84;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  line-height: 1;
+  font-weight: 400;
+}
+.remove-btn:hover { border-color: var(--red); color: var(--red); background: #fdf0f0; }
+
+/* ── Add btn ─────────────────────────────────── */
+.btn-add {
+  background: transparent;
+  border: 1px dashed var(--line-dk);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  padding: 9px 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  width: 100%;
+  margin-top: 2px;
+}
+.btn-add:hover { border-color: var(--navy); color: var(--navy); background: #edf1f8; }
+
+/* ── Admission toggle ────────────────────────── */
+.admit-toggle-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #4a5870;
+  margin-bottom: 6px;
+}
+
+.admit-toggle {
+  display: flex;
+  border: 1px solid var(--line-dk);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.admit-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 9px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  line-height: 1.3;
+}
+.admit-btn:first-child { border-right: 1px solid var(--line-dk); }
+.admit-btn.active {
+  background: var(--navy);
+  color: #fff;
+  font-weight: 600;
+}
+.admit-btn:not(.active):hover { background: var(--cream2); color: var(--ink); }
+
+/* ── Note box ────────────────────────────────── */
+.note {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  padding: 8px 12px;
+  background: var(--cream);
+  border-radius: var(--radius);
+  border-left: 2px solid var(--line-dk);
+}
+
+/* ── Action card ─────────────────────────────── */
+.action-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.btn-calculate {
+  width: 100%;
+  background: var(--terracotta);
+  color: #fff;
+  border: none;
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 15px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-calculate:hover { background: var(--terra-l); }
+
+.btn-danger {
+  width: 100%;
+  background: var(--paper);
+  border: none;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-danger:hover { background: #fdf0f0; color: var(--red); }
+
+/* ── Result block ────────────────────────────── */
+.result-block {
+  padding: 24px 16px 20px;
+  display: none;
+  border-top: 1px solid var(--line);
+  background: var(--cream);
+  text-align: center;
+  animation: rowIn 0.25s ease;
+}
+.result-block.show { display: block; }
+
+.result-eyebrow {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.result-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--terracotta);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.result-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 7px;
+  font-style: italic;
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 400px) {
+  .prior-grid { grid-template-columns: 1fr; }
+  .row        { grid-template-columns: 76px 1fr; gap: 6px; }
+  .repeat-row { grid-template-columns: 66px 1fr 1fr; gap: 5px; }
+  .col-heads.regular { grid-template-columns: 76px 1fr 30px; }
+  .col-heads.repeat  { grid-template-columns: 66px 1fr 1fr 30px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-eyebrow">BRAC University</div>
+  <div class="header-title">CGPA Calculator</div>
+  <div class="header-sub">With Repeat / Retake Adjustment</div>
+</div>
+
+<div class="wrap">
+
+  <!-- Previous Record -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-title">Previous Record</span>
+      <span class="card-badge">Optional</span>
+    </div>
+    <div class="card-body">
+      <div class="prior-grid">
+        <div class="field">
+          <span class="field-label">Previous CGPA</span>
+          <input id="prevCgpa" type="number" min="0" max="4" step="0.01" placeholder="e.g. 3.45">
+        </div>
+        <div class="field">
+          <span class="field-label">Completed Credits</span>
+          <input id="prevCredits" type="number" min="0" step="0.5" placeholder="e.g. 72">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Regular Courses -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-title">Regular Courses</span>
+      <span class="card-badge" id="reg-count">0</span>
+    </div>
+    <div class="card-body">
+      <div class="col-heads regular">
+        <span class="col-head">Credits</span>
+        <span class="col-head">Grade</span>
+        <span class="col-head spacer">×</span>
+      </div>
+      <div id="courses"></div>
+      <button class="btn-add" onclick="addCourse()">+ Add Course</button>
+    </div>
+  </div>
+
+  <!-- Repeat / Retake -->
+  <div class="card">
+    <div class="card-head">
+      <span class="card-title">Repeat / Retake Courses</span>
+      <span class="card-badge" id="rep-count">0</span>
+    </div>
+    <div class="card-body">
+      <div>
+        <div class="admit-toggle-label">When did you get admitted?</div>
+        <div class="admit-toggle">
+          <button class="admit-btn active" id="btn-before" onclick="setAdmitPolicy('before')">Before Summer 2025<br><span style="font-size:10.5px;font-weight:400;opacity:0.8;">Best grade counts</span></button>
+          <button class="admit-btn" id="btn-after" onclick="setAdmitPolicy('after')">Summer 2025 or After<br><span style="font-size:10.5px;font-weight:400;opacity:0.8;">Latest grade counts</span></button>
+        </div>
+      </div>
+      <div class="note" id="repeat-note">Enter grades for both attempts — the <strong>better</strong> grade will be applied.</div>
+      <div id="repeats"></div>
+      <button class="btn-add" onclick="addRepeat()">+ Add Repeat / Retake</button>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="action-card">
+    <button class="btn-calculate" onclick="calculate()">Calculate CGPA</button>
+    <button class="btn-danger" onclick="clearAll()">Clear All</button>
+    <div class="result-block" id="result">
+      <div class="result-eyebrow">Your Cumulative GPA</div>
+      <div class="result-value" id="result-val">—</div>
+      <div class="result-sub" id="result-sub"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer style="text-align:center; padding: 32px 16px 36px; font-family: 'DM Sans', sans-serif; display:block; width:100%;">
+  <span style="display:inline-block; font-family:'Fraunces', serif; font-size:9px; font-weight:600; color:#1e1a14; letter-spacing:1.5px; opacity:0.3;">@TRA</span>
+</footer>
+
+<script>
+const grades = [
+  {label:"A/A+ (4.0)", value:4.0},
+  {label:"A- (3.7)",   value:3.7},
+  {label:"B+ (3.3)",   value:3.3},
+  {label:"B (3.0)",    value:3.0},
+  {label:"B- (2.7)",   value:2.7},
+  {label:"C+ (2.3)",   value:2.3},
+  {label:"C (2.0)",    value:2.0},
+  {label:"C- (1.7)",   value:1.7},
+  {label:"F (0.0)",    value:0.0},
+];
+
+let courses = [], repeats = [];
+let courseCounter = 0, repeatCounter = 0;
+let admitPolicy = 'before'; // 'before' = best grade, 'after' = latest grade
+
+function setAdmitPolicy(policy) {
+  admitPolicy = policy;
+  document.getElementById('btn-before').classList.toggle('active', policy === 'before');
+  document.getElementById('btn-after').classList.toggle('active', policy === 'after');
+  const note = document.getElementById('repeat-note');
+  if (policy === 'before') {
+    note.innerHTML = 'Enter grades for both attempts — the <strong>better</strong> grade will be applied.';
+  } else {
+    note.innerHTML = 'Enter grades for both attempts — the <strong>latest</strong> (new) grade will be applied.';
+  }
+}
+
+function buildDropdown(defaultLabel, cbStr, uid) {
+  return `<div class="dropdown" id="${uid}">
+    <div class="dropdown-selected" onclick="toggleDD('${uid}')">
+      <span>${defaultLabel}</span>
+      <div class="dd-arrow"></div>
+    </div>
+    <div class="dropdown-list">
+      ${grades.map(g => `
+        <div class="dropdown-item${g.label===defaultLabel?' active':''}"
+          onclick="pickGrade('${uid}',${g.value},'${g.label}',${cbStr})">
+          ${g.label}
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function toggleDD(uid) {
+  const el     = document.getElementById(uid);
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.dropdown.open').forEach(d => {
+    d.classList.remove('open');
+    d.querySelector('.dropdown-list').classList.remove('show');
+  });
+  if (!wasOpen) {
+    el.classList.add('open');
+    el.querySelector('.dropdown-list').classList.add('show');
+  }
+}
+
+function pickGrade(uid, val, label, cb) {
+  cb(val);
+  document.querySelector(`#${uid} .dropdown-selected span`).textContent = label;
+  document.getElementById(uid).classList.remove('open');
+  document.querySelector(`#${uid} .dropdown-list`).classList.remove('show');
+  document.querySelectorAll(`#${uid} .dropdown-item`).forEach(d => {
+    d.classList.toggle('active', d.textContent.trim() === label.trim());
+  });
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dropdown')) {
+    document.querySelectorAll('.dropdown.open').forEach(d => {
+      d.classList.remove('open');
+      d.querySelector('.dropdown-list').classList.remove('show');
+    });
+  }
+});
+
+function addCourse() {
+  const id = courseCounter++;
+  courses.push({id, credit:3, grade:4.0});
+  const div = document.createElement('div');
+  div.className = 'course-item'; div.id = `c-${id}`;
+  div.innerHTML = `
+    <div class="course-box">
+      <div class="row">
+        <input type="number" value="3" min="0.75" step="0.75"
+          oninput="updateCourse(${id},'credit',this.value)">
+        ${buildDropdown('A/A+ (4.0)', `(v)=>updateCourse(${id},'grade',v)`, `g${id}`)}
+      </div>
+    </div>
+    <button class="remove-btn" onclick="removeCourse(${id})">×</button>`;
+  document.getElementById('courses').appendChild(div);
+  updateCounts();
+}
+
+function addRepeat() {
+  const id = repeatCounter++;
+  repeats.push({id, credit:3, old:4.0, new:4.0});
+  const num = repeats.length;
+  const div = document.createElement('div');
+  div.className = 'repeat-sub'; div.id = `r-${id}`;
+  div.innerHTML = `
+    <div class="repeat-sub-head">
+      <span class="repeat-sub-num" id="rnum-${id}">Course ${num}</span>
+      <button class="remove-btn" onclick="removeRepeat(${id})">×</button>
+    </div>
+    <div class="repeat-item" style="padding:12px;">
+      <div class="repeat-credit-col">
+        <div class="repeat-grade-label">Credits</div>
+        <input type="number" value="3" min="0.75" step="0.75"
+          oninput="updateRepeat(${id},'credit',this.value)">
+      </div>
+      <div class="repeat-grades">
+        <div>
+          <div class="repeat-grade-label">Prev Grade</div>
+          ${buildDropdown('A/A+ (4.0)', `(v)=>updateRepeat(${id},'old',v)`, `ro${id}`)}
+        </div>
+        <div>
+          <div class="repeat-grade-label">New Grade</div>
+          ${buildDropdown('A/A+ (4.0)', `(v)=>updateRepeat(${id},'new',v)`, `rn${id}`)}
+        </div>
+      </div>
+      <div class="repeat-remove-col" style="display:none;"></div>
+    </div>`;
+  document.getElementById('repeats').appendChild(div);
+  updateCounts();
+}
+
+function updateCourse(id, key, val) {
+  const c = courses.find(x => x.id === id);
+  if (c) c[key] = parseFloat(val) || 0;
+}
+function updateRepeat(id, key, val) {
+  const r = repeats.find(x => x.id === id);
+  if (r) r[key] = parseFloat(val) || 0;
+}
+
+function removeCourse(id) {
+  courses = courses.filter(c => c.id !== id);
+  document.getElementById(`c-${id}`).remove();
+  updateCounts();
+}
+function removeRepeat(id) {
+  repeats = repeats.filter(r => r.id !== id);
+  document.getElementById(`r-${id}`).remove();
+  document.querySelectorAll('#repeats .repeat-sub').forEach((el, i) => {
+    const numEl = el.querySelector('.repeat-sub-num');
+    if (numEl) numEl.textContent = `Course ${i + 1}`;
+  });
+  updateCounts();
+}
+
+function updateCounts() {
+  document.getElementById('reg-count').textContent = courses.length;
+  document.getElementById('rep-count').textContent = repeats.length;
+}
+
+function compute() {
+  const prevCgpa    = parseFloat(document.getElementById('prevCgpa').value)    || 0;
+  const prevCredits = parseFloat(document.getElementById('prevCredits').value) || 0;
+  let credits = prevCredits;
+  let points  = prevCgpa * prevCredits;
+  courses.forEach(c => { credits += c.credit; points += c.credit * c.grade; });
+  repeats.forEach(r => {
+    if (admitPolicy === 'before') {
+      // best grade replaces old grade
+      const best = Math.max(r.old, r.new);
+      points += r.credit * (best - r.old);
+    } else {
+      // latest (new) grade replaces old grade
+      points += r.credit * (r.new - r.old);
+    }
+  });
+  return { cgpa: credits ? points / credits : 0, credits };
+}
+
+function calculate() {
+  const { cgpa, credits } = compute();
+  document.getElementById('result-val').textContent = cgpa.toFixed(2);
+  document.getElementById('result-sub').textContent = `Based on ${credits.toFixed(1)} total credits`;
+  const rb = document.getElementById('result');
+  rb.classList.add('show');
+  rb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function clearAll() {
+  courses = []; repeats = [];
+  courseCounter = 0; repeatCounter = 0;
+  document.getElementById('courses').innerHTML  = '';
+  document.getElementById('repeats').innerHTML  = '';
+  document.getElementById('prevCgpa').value    = '';
+  document.getElementById('prevCredits').value = '';
+  document.getElementById('result').classList.remove('show');
+  addCourse(); addCourse(); addCourse();
+  updateCounts();
+}
+
+addCourse(); addCourse(); addCourse();
+</script>
+</body>
+</html>
