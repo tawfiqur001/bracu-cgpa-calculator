@@ -558,14 +558,16 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
       <span class="card-badge" id="rep-count">0</span>
     </div>
     <div class="card-body">
-      <div>
-        <div class="admit-toggle-label">When did you get admitted?</div>
-        <div class="admit-toggle">
-          <button class="admit-btn active" id="btn-before" onclick="setAdmitPolicy('before')">Before Summer 2025<br><span style="font-size:10.5px;font-weight:400;opacity:0.8;">Best grade counts</span></button>
-          <button class="admit-btn" id="btn-after" onclick="setAdmitPolicy('after')">Summer 2025 or After<br><span style="font-size:10.5px;font-weight:400;opacity:0.8;">Latest grade counts</span></button>
+      <div id="repeat-controls" style="display:none; display:none;">
+        <div>
+          <div class="admit-toggle-label">When did you get admitted?</div>
+          <div class="admit-toggle">
+            <button class="admit-btn active" id="btn-before" onclick="setAdmitPolicy('before')">Before Summer 2025<br><span style="font-size:10.5px;font-weight:400;opacity:0.8;">Best grade counts</span></button>
+            <button class="admit-btn" id="btn-after" onclick="setAdmitPolicy('after')">Summer 2025 or After<br><span style="font-size:10.5px;font-weight:400;opacity:0.8;">Latest grade counts</span></button>
+          </div>
         </div>
+        <div class="note" id="repeat-note">Enter grades for both attempts - the <strong>better</strong> grade will be applied.</div>
       </div>
-      <div class="note" id="repeat-note">Enter grades for both attempts - the <strong>better</strong> grade will be applied.</div>
       <div id="repeats"></div>
       <button class="btn-add" onclick="addRepeat()">+ Add Repeat / Retake</button>
     </div>
@@ -585,20 +587,24 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
 </div>
 
 <footer style="text-align:center; padding: 32px 16px 36px; font-family: 'DM Sans', sans-serif; display:block; width:100%;">
-  <span style="display:inline-block; font-family:'Fraunces', serif; font-size:9px; font-weight:600; color:#1e1a14; letter-spacing:1.5px; opacity:0.3;">@TR</span>
+  <span style="display:inline-block; font-family:'Fraunces', serif; font-size:9px; font-weight:600; color:#1e1a14; letter-spacing:1.5px; opacity:0.3;">@TRA</span>
 </footer>
 
 <script>
 const grades = [
-  {label:"A/A+ (4.0)", value:4.0},
-  {label:"A- (3.7)",   value:3.7},
-  {label:"B+ (3.3)",   value:3.3},
-  {label:"B (3.0)",    value:3.0},
-  {label:"B- (2.7)",   value:2.7},
-  {label:"C+ (2.3)",   value:2.3},
-  {label:"C (2.0)",    value:2.0},
-  {label:"C- (1.7)",   value:1.7},
-  {label:"F (0.0)",    value:0.0},
+  {label:"A+ (4.0)",  value:4.0},
+  {label:"A (4.0)",   value:4.0},
+  {label:"A- (3.7)",  value:3.7},
+  {label:"B+ (3.3)",  value:3.3},
+  {label:"B (3.0)",   value:3.0},
+  {label:"B- (2.7)",  value:2.7},
+  {label:"C+ (2.3)",  value:2.3},
+  {label:"C (2.0)",   value:2.0},
+  {label:"C- (1.7)",  value:1.7},
+  {label:"D+ (1.3)",  value:1.3},
+  {label:"D (1.0)",   value:1.0},
+  {label:"D- (0.7)",  value:0.7},
+  {label:"F (0.0)",   value:0.0},
 ];
 
 let courses = [], repeats = [];
@@ -675,7 +681,7 @@ function addCourse() {
       <div class="row">
         <input type="number" value="3" min="0.75" step="0.75"
           oninput="updateCourse(${id},'credit',this.value)">
-        ${buildDropdown('A/A+ (4.0)', `(v)=>updateCourse(${id},'grade',v)`, `g${id}`)}
+        ${buildDropdown('A+ (4.0)', `(v)=>updateCourse(${id},'grade',v)`, `g${id}`)}
       </div>
     </div>
     <button class="remove-btn" onclick="removeCourse(${id})">×</button>`;
@@ -684,6 +690,9 @@ function addCourse() {
 }
 
 function addRepeat() {
+  document.getElementById('repeat-controls').style.display = 'flex';
+  document.getElementById('repeat-controls').style.flexDirection = 'column';
+  document.getElementById('repeat-controls').style.gap = '12px';
   const id = repeatCounter++;
   repeats.push({id, credit:3, old:4.0, new:4.0});
   const num = repeats.length;
@@ -703,11 +712,11 @@ function addRepeat() {
       <div class="repeat-grades">
         <div>
           <div class="repeat-grade-label">Prev Grade</div>
-          ${buildDropdown('A/A+ (4.0)', `(v)=>updateRepeat(${id},'old',v)`, `ro${id}`)}
+          ${buildDropdown('A+ (4.0)', `(v)=>updateRepeat(${id},'old',v)`, `ro${id}`)}
         </div>
         <div>
           <div class="repeat-grade-label">New Grade</div>
-          ${buildDropdown('A/A+ (4.0)', `(v)=>updateRepeat(${id},'new',v)`, `rn${id}`)}
+          ${buildDropdown('A+ (4.0)', `(v)=>updateRepeat(${id},'new',v)`, `rn${id}`)}
         </div>
       </div>
       <div class="repeat-remove-col" style="display:none;"></div>
