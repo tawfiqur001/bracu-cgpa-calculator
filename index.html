@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CGPA Calculator — BRACU</title>
+<title>CGPA Calculator - BRACU</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&display=swap" rel="stylesheet">
 <style>
@@ -565,7 +565,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
           <button class="admit-btn" id="btn-after" onclick="setAdmitPolicy('after')">Summer 2025 or After<br><span style="font-size:10.5px;font-weight:400;opacity:0.8;">Latest grade counts</span></button>
         </div>
       </div>
-      <div class="note" id="repeat-note">Enter grades for both attempts — the <strong>better</strong> grade will be applied.</div>
+      <div class="note" id="repeat-note">Enter grades for both attempts - the <strong>better</strong> grade will be applied.</div>
       <div id="repeats"></div>
       <button class="btn-add" onclick="addRepeat()">+ Add Repeat / Retake</button>
     </div>
@@ -611,9 +611,9 @@ function setAdmitPolicy(policy) {
   document.getElementById('btn-after').classList.toggle('active', policy === 'after');
   const note = document.getElementById('repeat-note');
   if (policy === 'before') {
-    note.innerHTML = 'Enter grades for both attempts — the <strong>better</strong> grade will be applied.';
+    note.innerHTML = 'Enter grades for both attempts - the <strong>better</strong> grade will be applied.';
   } else {
-    note.innerHTML = 'Enter grades for both attempts — the <strong>latest</strong> (new) grade will be applied.';
+    note.innerHTML = 'Enter grades for both attempts - the <strong>latest</strong> (new) grade will be applied.';
   }
 }
 
