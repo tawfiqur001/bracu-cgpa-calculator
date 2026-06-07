@@ -45,7 +45,7 @@ body {
   padding-bottom: 0;
 }
 
-/* ── Header ─────────────────────────────────── */
+/* Header */
 .header {
   background: #08172e;
   padding: 28px 20px 24px;
@@ -79,14 +79,14 @@ body {
   color: rgba(255,255,255,0.68);
 }
 
-/* ── Wrap ────────────────────────────────────── */
+/* Wrap */
 .wrap {
   max-width: 660px;
   margin: 0 auto;
   padding: 0 16px;
 }
 
-/* ── Card ────────────────────────────────────── */
+/* Card */
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -133,14 +133,14 @@ body {
   overflow: visible;
 }
 
-/* ── Prior grid ──────────────────────────────── */
+/* Prior grid */
 .prior-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-/* ── Field ───────────────────────────────────── */
+/* Field */
 .field { display: flex; flex-direction: column; gap: 4px; }
 
 .field-label {
@@ -167,7 +167,7 @@ input:focus { border-color: var(--ink); background: #fff; }
 input::placeholder { color: var(--ghost); }
 input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
 
-/* ── Column heads ────────────────────────────── */
+/* Column heads */
 .col-heads { display: grid; gap: 8px; padding: 0 2px; }
 .col-heads.regular { grid-template-columns: 86px 1fr 30px; }
 
@@ -180,7 +180,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
 }
 .col-head.spacer { visibility: hidden; }
 
-/* ── Course row ─────────────────────────────────── */
+/* Course row */
 .course-item {
   display: flex;
   align-items: center;
@@ -239,7 +239,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
   width: 34px;
 }
 
-/* ── Repeat subsection ───────────────────────── */
+/* Repeat subsection */
 .repeat-sub {
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -267,7 +267,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
   opacity: 0.7;
 }
 
-/* ── Dropdown ─ */
+/* Dropdown */
 .dropdown { position: relative; }
 
 .dropdown-selected {
@@ -336,7 +336,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
 .dropdown-item:hover { background: var(--cream); }
 .dropdown-item.active { font-weight: 600; color: var(--navy); background: #edf1f8; }
 
-/* ── Remove btn ──────────────────────────────── */
+/* Remove btn */
 .remove-btn {
   width: 32px; height: 32px;
   flex-shrink: 0;
@@ -353,7 +353,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
 }
 .remove-btn:hover { border-color: var(--red); color: var(--red); background: #fdf0f0; }
 
-/* ── Add btn ─────────────────────────────────── */
+/* Add btn */
 .btn-add {
   background: transparent;
   border: 1px dashed var(--line-dk);
@@ -370,7 +370,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
 }
 .btn-add:hover { border-color: var(--navy); color: var(--navy); background: #edf1f8; }
 
-/* ── Admission toggle ────────────────────────── */
+/* Admission toggle */
 .admit-toggle-label {
   font-size: 11.5px;
   font-weight: 600;
@@ -410,7 +410,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
 }
 .admit-btn:not(.active):hover { background: var(--cream2); color: var(--ink); }
 
-/* ── Note box ────────────────────────────────── */
+/* Note box */
 .note {
   font-size: 12px;
   color: var(--muted);
@@ -421,7 +421,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
   border-left: 2px solid var(--line-dk);
 }
 
-/* ── Action card ─────────────────────────────── */
+/* Action card */
 .action-card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -460,7 +460,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
 }
 .btn-danger:hover { background: #fdf0f0; color: var(--red); }
 
-/* ── Result block ────────────────────────────── */
+/* Result block */
 .result-block {
   padding: 24px 16px 20px;
   display: none;
@@ -496,7 +496,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.5; }
   font-style: italic;
 }
 
-/* ── Responsive ──────────────────────────────── */
+/* Responsive */
 @media (max-width: 400px) {
   .prior-grid { grid-template-columns: 1fr; }
   .row        { grid-template-columns: 76px 1fr; gap: 6px; }
